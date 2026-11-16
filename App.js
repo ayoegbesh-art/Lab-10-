@@ -33,12 +33,16 @@ export default function App() {
     try {
       setLoading(true);
       // TODO 3a: YOUR CODE HERE
+      const data = await fetchTodos();
+      setTodos(data)
     } catch (error) {
       Alert.alert("Error", "Could not load todos: " + error.message);
     } finally {
       setLoading(false);
     }
   };
+useEffect(() => {loadTodos(); }, []);
+
 
   // TODO 3b: YOUR useEffect HERE
 
@@ -50,11 +54,13 @@ export default function App() {
   //   and reload the list by calling loadTodos().
   const handleAdd = async () => {
     // TODO 4a: YOUR CODE HERE
-
+      if(text.trim() === "") return;
     try {
       // TODO 4b: YOUR CODE HERE
-
+      await addTodo(text.trim());
       // TODO 7: YOUR CODE HERE
+      setText("");
+      await loadTodos();
     } catch (error) {
       Alert.alert("Error", "Could not save todo: " + error.message);
     }
@@ -78,11 +84,20 @@ export default function App() {
         </TouchableOpacity>
       </View>
 
-      {/* TODO 5: Replace the placeholder below with a FlatList that shows the todos.
-          - data={todos}
-          - keyExtractor={(item) => item.id}
-          - renderItem renders <TodoItem title={item.title} completed={item.completed} />
-      */}
+      {
+      loading ? (
+        <ActivityIndicator size="large"  color= "#e54646" /> ) : (
+
+        <FlatList data={todos} keyExtractor={(item) => item.id}
+      renderItem = {({item}) => (
+        <TodoItem title={item.title} completed={item.completed} />        
+      )}
+      ListEmptyComponent={<Text style={styles.empty}>No TO DOs yet.</Text>}
+      />
+        )}
+  
+  
+      
 
       {/* TODO 6: Handle loading and empty states.
           - If loading is true, show <ActivityIndicator size="large" /> instead of the list.

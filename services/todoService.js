@@ -44,6 +44,6 @@ export async function addTodo(title) {
  * Hint: use snapshot.docs.map(...)
  */
 export async function fetchTodos() {
-  // YOUR CODE HERE
-  return [];
+   const snapshot = await getDocs(todosCollection);
+   return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
 }
